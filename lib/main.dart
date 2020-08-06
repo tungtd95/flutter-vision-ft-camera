@@ -1,4 +1,6 @@
 import 'package:camera/camera.dart';
+import 'package:camera_flutter/scanner_utils.dart';
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
 
 List<CameraDescription> cameras;
@@ -16,17 +18,41 @@ class CameraApp extends StatefulWidget {
 
 class _CameraAppState extends State<CameraApp> {
   CameraController controller;
+  bool _isDetecting = false;
+  String barcodes = "";
+  int index = 0;
 
   @override
   void initState() {
     super.initState();
-    controller = CameraController(cameras[0], ResolutionPreset.max);
+    _initCam();
+  }
+
+  void _initCam() async {
+    final CameraDescription description =
+        await ScannerUtils.getCamera(CameraLensDirection.back);
+    controller = CameraController(description, ResolutionPreset.max);
     controller.initialize().then((_) {
       if (!mounted) {
         return;
       }
-      controller.startImageStream((image) => {
-        print("result: " + image.planes[0].toString())
+      controller.startImageStream((image) {
+        if (_isDetecting) return;
+        _isDetecting = true;
+        ScannerUtils.detect(
+          image: image,
+          imageRotation: description.sensorOrientation,
+        ).then(
+          (List<Barcode> results) {
+            results.forEach((element) {
+              setState(() {
+                index++;
+                if (index % 15 == 0) barcodes = "";
+                barcodes += "$index. ${element.displayValue}\n";
+              });
+            });
+          },
+        ).whenComplete(() => _isDetecting = false);
       });
       setState(() {});
     });
@@ -43,9 +69,23 @@ class _CameraAppState extends State<CameraApp> {
     if (!controller.value.isInitialized) {
       return Container();
     }
-    return AspectRatio(
-        aspectRatio:
-        controller.value.aspectRatio,
-        child: CameraPreview(controller));
+    return Column(
+      children: [
+        Container(
+          width: 200,
+          height: 200 / controller.value.aspectRatio,
+          child: CameraPreview(controller),
+        ),
+        Expanded(
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: Text(
+              barcodes,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        )
+      ],
+    );
   }
 }

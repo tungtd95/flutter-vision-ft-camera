@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "595937321322",
+    "firebase_url": "https://test-bf4b0.firebaseio.com",
+    "project_id": "test-bf4b0",
+    "storage_bucket": "test-bf4b0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:595937321322:android:0aecebb7fb024ec45a4513",
+        "android_client_info": {
+          "package_name": "net.vinid.newretail.camera_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "595937321322-g5tdococ1drqjppuftkhoocoo4990lqh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyetw2NAyk6icGwsXhqU-VAMUOQcDDBMg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "595937321322-g5tdococ1drqjppuftkhoocoo4990lqh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
